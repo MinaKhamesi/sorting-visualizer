@@ -1,0 +1,111 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+body{
+    height:100vh;
+}
+.nav{
+    
+    width:100%;
+    min-height:5%;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+    list-style: none;
+    background:rgb(4, 70, 100);
+    flex-wrap: wrap;
+}
+.nav li{
+    margin:5px;
+}
+.nav li a{
+    text-decoration: none;
+    font-size:16px;
+    font-weight: bold;
+    margin:3px;
+    padding:5px;
+    color:#fff;
+    position:relative;
+    transition: color 0.3s linear;
+}
+.nav li a:hover{
+    top:1px;
+    left:1px;
+    color:#ccc;
+}
+#range-holder{
+    display: flex;
+    flex-direction:column;
+    text-align: center;
+}
+#range-holder span{
+    color:#fff;
+    margin-bottom: 3px;
+}
+
+.btn{
+    background: rgb(45, 120, 155);
+    padding:5px 10px;
+    position:relative;
+    transitoin:color 0.3s linear;
+    border-radius: 3px;
+}
+.btn:hover{
+    top:1px;
+    left:1px;
+    color:#ccc;
+}
+#algorithms-list{
+    position:absolute;
+    border:1px #ccc solid;
+    list-style: none;
+    color:#fff;
+    background:rgb(4, 70, 100);
+    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+     
+    z-index: 333;
+    display: flex;
+    flex-direction: column; 
+}
+/* #algorithm-holder a:hover #algorithms-list{
+    display: flex;
+    flex-direction: column; 
+}*/
+#algorithms-list li{
+    padding:10px;
+    cursor:pointer;
+    transition:0.5s linear;
+}
+#algorithms-list li:hover{
+    background:rgb(45, 120, 155);
+    border-radius:5px;
+}
+.list-container{
+    width:100%;
+    height:80%;
+    margin-top: 20px;
+    
+    display: flex;
+    align-items:end;
+    justify-content:center;
+}
+.number{
+    background:pink;
+    color:#555;
+    height:70px;
+    width:3px;
+    margin-right:2px;
+    text-align: center;
+}
+.visiting{
+    animation: visitingAnimation;
+    animation-duration: 0.3s;
+}
+@keyframes visitingAnimation{
+    0%{background: greenyellow;}
+    25%{background: green;}
+    100%{background-color: green;}
+}
+

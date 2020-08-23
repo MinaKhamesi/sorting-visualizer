@@ -4,7 +4,7 @@
 -----------------------------------------------------------*/
 
 let listSize = 10;
-let speed = 100;
+let speed = 3;
 let list = []
 let divList = [];
 let inProgress =false;
@@ -161,7 +161,7 @@ function visualizeAlgorithm(algorithm){
             console.log('merge is gonna run')
             break;
         case 'quick':
-            console.log('quick is gonna run')
+            quickSort(list,divList);
             break;
         case 'heap':
             heapSort(list,divList);
@@ -431,6 +431,80 @@ const siftDown = (currentIdx, endIdx, heap, divList, barsToAnimate) =>{
         }
     }
 }
+
+
+
+const quickSort = (list,divList)=>{
+    console.log('quick sort start');
+    let barsToAnimate=[];
+
+    quickSortHelper(0,list.length-1,list,divList,barsToAnimate);
+
+    animateBars(barsToAnimate,speed);
+
+    console.log('quick sort finish');
+}
+
+const quickSortHelper = (startIdx,endIdx,list,divList,barsToAnimate)=>{
+
+    if(endIdx<=startIdx){
+        if(startIdx==endIdx){
+            barsToAnimate.push([divList[startIdx],null,'correct-position']);
+        }
+        return;
+    } 
+
+    let lessThanPointer = startIdx;
+    let pivotIdx = endIdx;
+
+    barsToAnimate.push([divList[pivotIdx],divList[lessThanPointer],'visiting']);
+
+    for(let i=startIdx;i<endIdx;i++){
+        
+
+        if(list[i]<list[pivotIdx]){
+
+            swap(list,i,lessThanPointer);
+
+            barsToAnimate.push([divList[i],null,'correct-position']);
+            barsToAnimate.push([divList[i],divList[lessThanPointer],'correct-order']);
+            barsToAnimate.push([divList[lessThanPointer],divList[i],'clearClasses']);
+
+            swap(divList,i,lessThanPointer);
+
+            lessThanPointer++;
+
+        }else{
+
+        barsToAnimate.push([divList[i],null,'wrong-position']);
+        barsToAnimate.push([divList[i],null,'clearClasses']);
+
+        }
+    }
+
+    swap(list,pivotIdx,lessThanPointer);
+
+    barsToAnimate.push([divList[pivotIdx],divList[lessThanPointer],'correct-order']);
+
+    barsToAnimate.push([divList[pivotIdx],null,'clearClasses']);
+    barsToAnimate.push([divList[pivotIdx],null,'correct-position']);
+
+
+    
+    swap(divList,pivotIdx,lessThanPointer);
+
+    let leftSubarrayIsSmaller = (lessThanPointer - startIdx) < (endIdx - lessThanPointer)
+
+    if(leftSubarrayIsSmaller){
+        quickSortHelper(startIdx,lessThanPointer-1,list,divList,barsToAnimate);
+        quickSortHelper(lessThanPointer+1,endIdx,list,divList,barsToAnimate);
+    }else{
+        quickSortHelper(lessThanPointer+1,endIdx,list,divList,barsToAnimate);
+        quickSortHelper(startIdx,lessThanPointer-1,list,divList,barsToAnimate);
+    }
+
+    
+}
 /*-------------------------------------
                 helper functions
 ----------------------------------------*/
@@ -451,28 +525,36 @@ const animateBars = (bars,speed)=>{
                     cell1.classList.add('visiting');
                     cell2 && cell2.classList.add('visiting');
                     return;
+
                 case 'wrong-position':
                     cell1.classList.add('wrong-position');
                     cell2 && cell2.classList.add('wrong-position');
                     return;
+
                 case 'correct-position':
                     cell1.classList.add('correct-position');
                     cell2 && cell2.classList.add('correct-position');
                     return;
+
                 case 'clearClasses':
-                    if(cell1.classList.contains('visiting')){
+
+                    if(cell1.classList.contains('visiting') || (cell2 && cell2.classList.contains('visiting'))){
                         cell1.classList.remove('visiting');
                         cell2 && cell2.classList.remove('visiting');
                     }
-                    if(cell1.classList.contains('wrong-position')){
+
+                    if(cell1.classList.contains('wrong-position') || (cell2 && cell2.classList.contains('wrong-position'))){
                         cell1.classList.remove('wrong-position');
                         cell2 && cell2.classList.remove('wrong-position');
                     }
-                    if(cell1.classList.contains('correct-position')){
+
+                    if(cell1.classList.contains('correct-position') || (cell2 && cell2.classList.contains('correct-position'))){
                         cell1.classList.remove('correct-position');
                         cell2 && cell2.classList.remove('correct-position');
                     }
+
                     return;
+
                 case 'correct-order':
                     let order1 = cell1.style.order;
                     let order2 = cell2.style.order;
@@ -485,4 +567,8 @@ const animateBars = (bars,speed)=>{
 
         },i*speed)
     }
+
+    setTimeout(()=>{
+        inProgress = false;
+    },bars.length*speed)
 }

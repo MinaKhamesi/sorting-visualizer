@@ -90,7 +90,7 @@ body{
     height:80%;
     margin-top: 20px; 
     display: flex;
-    align-items:center;
+    align-items:flex-end;
     justify-content:center;
 }
 .number{

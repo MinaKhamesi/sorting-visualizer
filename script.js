@@ -4,11 +4,12 @@
 -----------------------------------------------------------*/
 
 let listSize = 10;
-let speed = 0.1;
+let speed = 100;
 let list = []
 let divList = [];
 let inProgress =false;
 
+//#1 range input:
 const ListSizeInput = document.getElementById('listSizeRange');
 
 ListSizeInput.addEventListener('change',generateNumbersAndCreateDivs);
@@ -19,7 +20,7 @@ function generateNumbersAndCreateDivs(e){
 
     if(inProgress) inProgress = false;
 
-    let listSize = e.target.value;
+    listSize = e.target.value;
 
     if (listSize>150 && window.innerWidth<700){
         listSize = 150;
@@ -32,6 +33,21 @@ function generateNumbersAndCreateDivs(e){
 
     //speed = ((500-0.1)/(10-200)*(listSize-200)) + 0.1;
 }
+
+//#2 generate new set button:
+
+const generateBtn = document.getElementById('generateBtn');
+
+    generateBtn.addEventListener('click',()=>{
+
+    clearContainer()
+
+    if(inProgress) inProgress = false;
+
+    list = createNumbers(listSize);
+    divList = createDivs(list,listSize);
+})
+
 
 
 
@@ -294,6 +310,126 @@ const selectionSort = (list,divList) =>{
 
 const heapSort = (list,divList)=>{
     console.log('heap sort start');
+
+    let barsToAnimate = [];
+
+    buildMaxHeap(list,divList, barsToAnimate);
+
+    for(let endIdx=list.length-1;endIdx>0;endIdx--){
+        swap(list,0,endIdx);
+
+        barsToAnimate.push([divList[0],null,'correct-position']);
+        barsToAnimate.push([divList[endIdx],null,'wrong-position']);
+        barsToAnimate.push([divList[0], divList[endIdx],'correct-order']);
+        barsToAnimate.push([divList[endIdx],null,'clearClasses']);
+
+        swap(divList,0, endIdx);
+        
+        siftDown(0,endIdx-1,list,divList, barsToAnimate);
+    }
+
+    barsToAnimate.push([divList[0],null,'correct-position']);
+
+    animateBars(barsToAnimate, speed);
+}
+
+//     Heap Functions
+const buildMaxHeap = (list, divList, barsToAnimate) =>{
+
+    let firstParentIdx = Math.floor((list.length - 1)/2);
+    
+    
+
+    for(let currentIdx=firstParentIdx;currentIdx>=0;currentIdx--){
+        
+        siftDown(currentIdx, list.length-1, list,divList,barsToAnimate);
+
+    }
+
+}
+
+
+const siftDown = (currentIdx, endIdx, heap, divList, barsToAnimate) =>{
+    let childOneIdx = currentIdx*2 + 1;
+
+    while(childOneIdx<=endIdx){
+
+        barsToAnimate.push([divList[currentIdx],null,'visiting']);
+
+        let childTwoIdx = currentIdx*2+2;
+
+
+
+        if(childTwoIdx<=endIdx){
+            barsToAnimate.push([divList[childOneIdx],divList[childTwoIdx],'wrong-position']);
+        }else{
+            barsToAnimate.push([divList[childOneIdx],null,'wrong-position']);
+        }
+
+
+
+
+        let idxToSwap;
+
+        if(childTwoIdx<=endIdx && heap[childTwoIdx]>heap[childOneIdx]){
+            idxToSwap = childTwoIdx;
+        }else{
+            idxToSwap = childOneIdx;
+        }
+
+
+
+        if (heap[idxToSwap]>heap[currentIdx]){
+
+
+            swap( heap,currentIdx, idxToSwap);
+
+            barsToAnimate.push([divList[currentIdx],divList[idxToSwap],'correct-order']);
+            
+            barsToAnimate.push([divList[idxToSwap],null,'correct-position']);
+
+            barsToAnimate.push([divList[currentIdx],null,'clearClasses']);
+
+            if(childTwoIdx<=endIdx){
+                barsToAnimate.push([divList[childOneIdx],divList[childTwoIdx],'clearClasses']);
+            }else{
+                barsToAnimate.push([divList[childOneIdx],null,'clearClasses']);
+            }
+
+            barsToAnimate.push([divList[idxToSwap],null,'clearClasses']);
+
+           
+
+
+            swap(divList, currentIdx, idxToSwap);
+
+            currentIdx = idxToSwap;
+
+            childOneIdx = currentIdx*2 + 1;
+
+            
+
+        }else{
+            
+            if(childTwoIdx<=endIdx){
+                barsToAnimate.push([divList[childOneIdx],divList[childTwoIdx],'correct-position']);
+            }else{
+                barsToAnimate.push([divList[childOneIdx],null,'correct-position']);
+            }
+
+            //barsToAnimate.push([divList[currentIdx],null,'correct-position']);
+
+            if(childTwoIdx<=endIdx){
+                barsToAnimate.push([divList[childOneIdx],divList[childTwoIdx],'clearClasses']);
+            }else{
+                barsToAnimate.push([divList[childOneIdx],null,'clearClasses']);
+            }
+
+            barsToAnimate.push([divList[currentIdx],null,'clearClasses']);
+
+            return
+        }
+    }
 }
 /*-------------------------------------
                 helper functions

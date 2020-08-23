@@ -34,6 +34,7 @@ body{
     left:1px;
     color:#ccc;
 }
+
 #range-holder{
     display: flex;
     flex-direction:column;

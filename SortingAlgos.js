@@ -1,130 +1,8 @@
 
-/*----------------------------------------------------------
-#1      generate list of numbers based on the size of list 
------------------------------------------------------------*/
 
-let listSize = 10;
-let speed = 0.1;
-let list = []
-let divList = [];
-let inProgress =false;
+/*import {list,divList,speed,inProgress} from './UI.js';
 
-//#1 range input:
-const ListSizeInput = document.getElementById('listSizeRange');
-
-ListSizeInput.addEventListener('change',generateNumbersAndCreateDivs);
-
-function generateNumbersAndCreateDivs(e){
-
-    clearContainer()
-
-    if(inProgress) inProgress = false;
-
-    listSize = e.target.value;
-
-    if (listSize>150 && window.innerWidth<700){
-        listSize = 150;
-        e.target.value = 150;
-    }
-
-
-    list = createNumbers(listSize);
-    divList = createDivs(list,listSize);
-
-    //speed = ((500-0.1)/(10-200)*(listSize-200)) + 0.1;
-}
-
-//#2 generate new set button:
-
-const generateBtn = document.getElementById('generateBtn');
-
-    generateBtn.addEventListener('click',()=>{
-
-    clearContainer()
-
-    if(inProgress) inProgress = false;
-
-    list = createNumbers(listSize);
-    divList = createDivs(list,listSize);
-})
-
-
-
-
-function createNumbers(listSize){
-    const list = [];
-
-    while (list.length<listSize){
-
-        const number = Math.floor(Math.random()*listSize) +1;
-
-        list.push(number);
-    }
-
-
-    return list
-}
-
-
-
-
-
-//#populate the div of list container by bunch of divs with auto width and height of their value;
-function createDivs(list){
-    let listSize = list.length;
-
-    const divList = list.map((number,idx)=>createDiv(number,idx,listSize));
-
-    return divList
-}
-
-
-
-const listContainer = document.querySelector('.list-container');
-
-
-
-function createDiv(number,idx,listSize){
-    const width = 10 ;
-
-    const height = number/listSize*100;
-
-    const div = document.createElement('div');
-
-    div.className = 'number';
-
-    if (listSize<50 && window.innerWidth>700){
-        div.appendChild(document.createTextNode(`${number}`))
-    }
-    
-
-    div.style.width = `${width}%`;
-    div.style.height = `${height}%`;
-    div.style.order = idx+1;
-
-    listContainer.appendChild(div);
-
-
-    return div;
-}
-
-
-
-
-function clearContainer(){
-    listContainer.innerHTML = ''
-}
-
-
-
-//start page with 10 numbers.aka divs
-
-list = createNumbers(10);
-divList = createDivs(list);
-
-
-
-
+let inProgress = inProgress;*/
 
 
 //select the type of algorithm:
@@ -135,11 +13,20 @@ algorithmList.addEventListener('click',specifyAlgorithmType)
 
 
 function specifyAlgorithmType(e){
+    console.log(inProgress);
     if(inProgress) return;
     
     inProgress = true;
 
-    let algorithm = e.target.className;
+    let algorithm = e.target.id;
+    
+    //make all other disabled and this one active
+    e.target.classList.add('active');
+    document.querySelectorAll('.nav #algorithms-list li').forEach(btn=>{
+        if(btn.id!==e.target.id){
+            btn.classList.add('disabled');
+        }
+    })
 
     visualizeAlgorithm(algorithm);
 }
@@ -159,6 +46,7 @@ function visualizeAlgorithm(algorithm){
             break;
         case 'merge':
             console.log('merge is gonna run')
+            mergeSort(list, divList);
             break;
         case 'quick':
             quickSort(list,divList);
@@ -170,11 +58,12 @@ function visualizeAlgorithm(algorithm){
             return;
     }
 }
-/*------------------------------------------------------
 
-                  ALGORITHMS
 
------------------------------------------------------*/
+
+
+
+
 
 function bubbleSort(list,divList){
     console.log('start');
@@ -524,6 +413,96 @@ const quickSortHelper = (startIdx,endIdx,list,divList,barsToAnimate)=>{
 
     
 }
+
+const mergeSort = (list,divList) =>{
+    console.log('merge start');
+    let barsToAnimate = [];
+    let tempList = list.map(num=>null);
+    let tempDivList = list.map(num=>null);
+
+    mergeHelper(list,tempList,0,list.length-1,divList,tempDivList,barsToAnimate)
+    console.log(divList);
+    console.log(tempDivList);
+    console.log(list);
+    animateBars(barsToAnimate,speed);
+}
+
+
+const mergeHelper = (list,tempList,leftStart,rightEnd,divList,tempDivList,barsToAnimate) =>{
+    
+    if(leftStart >= rightEnd) return;
+
+    let middle = Math.floor((leftStart+rightEnd)/2);
+
+    mergeHelper(list,tempList,leftStart, middle,divList,tempDivList, barsToAnimate);
+    mergeHelper(list, tempList,middle+1,rightEnd,divList,tempDivList, barsToAnimate);
+
+    mergeHalves(list,tempList,leftStart,rightEnd,divList,tempDivList, barsToAnimate);
+
+}
+
+const mergeHalves = (list,tempList,leftStart,rightEnd,divList,tempDivList, barsToAnimate)=>{
+
+    let leftEnd = Math.floor((leftStart+rightEnd)/2);
+    let rightStart = leftEnd+1;
+
+    let left = leftStart;
+    let right = rightStart;
+    let tempIdx = leftStart;
+
+    while(left<=leftEnd && right<=rightEnd){
+
+        if(list[left]<=list[right]){
+            
+            tempList[tempIdx] = list[left];
+            tempDivList[tempIdx] = divList[left];
+
+            //barsToAnimate.push([divList[tempIdx],divList[left],'correct-order'])
+
+            left++;
+
+        }else{
+            
+            tempList[tempIdx] = list[right];
+            tempDivList[tempIdx] = divList[right];
+
+            //barsToAnimate.push([divList[tempIdx],divList[right],'correct-order'])
+
+
+            right++;
+        }
+        tempIdx++;
+    }
+
+    while(left<=leftEnd){
+        tempList[tempIdx] = list[left];
+        tempDivList[tempIdx] = divList[left];
+        left++;
+        tempIdx++;
+    }
+
+    while(right<=rightEnd){
+       
+        tempList[tempIdx] = list[right];
+        tempDivList[tempIdx] = divList[right];
+        right++;
+        tempIdx++;
+    }
+
+    for(let i=leftStart;i<=rightEnd;i++){
+        list[i] = tempList[i];
+        barsToAnimate.push([tempDivList[i],i,'merge-order']);
+        divList[i] = tempDivList[i];
+    }
+
+}
+
+
+
+
+
+
+
 /*-------------------------------------
                 helper functions
 ----------------------------------------*/
@@ -580,6 +559,9 @@ const animateBars = (bars,speed)=>{
                     cell1.style.order = order2;
                     cell2.style.order = order1;
                     break;
+                case 'merge-order':
+                    //cell2 here is actually index
+                    cell1.style.order = cell2+1;
                 default:
                     break;
             }
@@ -589,5 +571,9 @@ const animateBars = (bars,speed)=>{
 
     setTimeout(()=>{
         inProgress = false;
+    //make btn back to normal
+    document.querySelectorAll('.nav #algorithms-list li').forEach(btn=>{
+        btn.classList = [];
+    })
     },bars.length*speed)
 }

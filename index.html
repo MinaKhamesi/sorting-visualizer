@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./src/style.css">
+    <!--<script src="script.js" defer></script>-->
+    <script src="./src/UI.js"  defer></script>
+    <script src="./src/SortingAlgos.js"  defer></script>
+    
+    <title>Sorting Algorithm Visualizer</title>
+</head>
+<body>
+    
+    <div class='nav'>
+        <h1>Sorting Algorithms Visualizer</h1>
+        <ul>
+        <!--<li class='btn' id='vis-btn'>
+            <a href="#" class="header-link">Sort!</a>
+        </li>-->
+        <li id='range-holder'>
+            <span>List Size</span>
+            <input id='listSizeRange' type="range" min=5 max=200  value=100>
+            <span>Animation Speed</span>
+            <input id='speedRange' type="range" min=1 max=400  value=4 >
+        </li>
+        <li id='generateBtn'>
+            <a href="#" class="header-link" >Generate New Set</a>
+        </li>
+
+        <li id='algorithm-holder'>
+            <ul id='algorithms-list'>
+                <li id='bubble'>Bubble Sort</li>
+                <li id='insertion'>Insertion Sort</li>
+                <li id='selection'>Selection Sort</li>
+                <li id = 'quick'>Quick Sort</li>
+                <li id='heap'>Heap Sort</li>
+                <li id='merge'>Merge Sort</li>
+                <li id='radix'>Radix Sort</li>
+           </ul>
+        </li>
+    </ul>
+    </div>
+
+    <div class="container">
+         <div class="list-container"></div>
+    </div>
+</body>
+</html>

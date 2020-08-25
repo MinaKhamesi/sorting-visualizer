@@ -54,6 +54,9 @@ function visualizeAlgorithm(algorithm){
         case 'heap':
             heapSort(list,divList);
             break;
+        case "radix":
+            radixSort(list,divList);
+            break;
         default:
             return;
     }
@@ -76,7 +79,7 @@ function bubbleSort(list,divList){
         isSorted = true;
     
         for(let j=0;j<list.length-counter-1;j++){
-           console.log('for-loop start')
+           
             listToAnimate.push([divList[j],divList[j+1],'visiting']);
 
                 if(list[j]>list[j+1]){
@@ -415,15 +418,13 @@ const quickSortHelper = (startIdx,endIdx,list,divList,barsToAnimate)=>{
 }
 
 const mergeSort = (list,divList) =>{
-    console.log('merge start');
+   
     let barsToAnimate = [];
     let tempList = list.map(num=>null);
     let tempDivList = list.map(num=>null);
 
     mergeHelper(list,tempList,0,list.length-1,divList,tempDivList,barsToAnimate)
-    console.log(divList);
-    console.log(tempDivList);
-    console.log(list);
+    
     animateBars(barsToAnimate,speed);
 }
 
@@ -499,6 +500,77 @@ const mergeHalves = (list,tempList,leftStart,rightEnd,divList,tempDivList, barsT
 
 
 
+const radixSort = (list,divList)=>{
+
+    let barsToAnimate = [];
+
+    let maxNumber  = Math.max(...list);
+    let maxNumStr = maxNumber.toString();
+    let maxPosition = maxNumStr.length;
+    
+    let bucketsHoldingDivs = []
+    let buckets = []
+    for(let i=0;i<10;i++){
+        buckets.push([]);
+        bucketsHoldingDivs.push([]);
+    }
+
+    let position = 0;
+
+    while(position<maxPosition){
+        //#1 building buckets
+        for(let i=list.length-1;i>=0;i--){
+
+            let numStr = list[i].toString().split('').reverse();
+
+            let bucketIdx = (position<numStr.length) ? parseInt(numStr[position], 10) : 0;
+
+            buckets[bucketIdx].push(list[i]);
+
+            bucketsHoldingDivs[bucketIdx].push(divList[i]);
+            
+            
+            barsToAnimate.push([divList[i],null,'visiting']);
+            barsToAnimate.push([divList[i],null,'clearClasses']);
+            
+        }
+        
+
+        //#2 rebuilding list
+        let i = 0;
+        let bucketsIdx = 0;
+        
+        while(bucketsIdx<buckets.length){
+
+            if(buckets[bucketsIdx].length>0){
+
+                while(buckets[bucketsIdx].length>0){
+                    
+                    list[i] = buckets[bucketsIdx].pop();
+
+                   divList[i] = bucketsHoldingDivs[bucketsIdx].pop();
+
+                    
+                    i++;
+                }
+            }
+            bucketsIdx++;
+        }
+        
+        //animating the orders
+        for(let i=0;i<divList.length;i++){
+            barsToAnimate.push([divList[i],null,'correct-position']);
+
+            barsToAnimate.push([divList[i],i,'merge-order']);
+
+            barsToAnimate.push([divList[i],null,'clearClasses']);
+        }
+
+        position++;
+    }
+
+    animateBars(barsToAnimate,speed);
+}
 
 
 

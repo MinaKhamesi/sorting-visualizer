@@ -14,4 +14,4 @@ Please Find the application link below:
 
 ###### demo of application on desktop
 
-![](desktop.git)
+![](desktop.gif)

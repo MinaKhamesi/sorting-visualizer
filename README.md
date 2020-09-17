@@ -1,5 +1,5 @@
 # Sorting Algorithms Visualizer
-####### Built in VanillaJS, HTML and CSS
+###### Built in VanillaJS, HTML and CSS
 
 #### Algorithms includes:
 *  Bubble sorting algorithm O(N^2)
@@ -13,4 +13,5 @@ Please Find the application link below:
 ### [https://minakhamesi.github.io/sorting-visualizer/](https://minakhamesi.github.io/sorting-visualizer/)
 
 ###### demo of application on desktop
-![](sortingVis/desktop.git)
+
+![](desktop.git)
